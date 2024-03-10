@@ -1,13 +1,15 @@
 package lh.content;
 
 
+import arc.graphics.Color;
 import lh.classes.types.SigilStatusEffect;
 import lh.graphics.LHPal;
+import mindustry.content.Fx;
 import mindustry.type.StatusEffect;
 
 public class LHStatuses {
     public static StatusEffect
-    speedSigil, damageSigil, healthSigil, reloadSigil, crawlerSigil;
+    speedSigil, damageSigil, healthSigil, reloadSigil, crawlerSigil, disabled;
 
     public static void load(){
         speedSigil = new SigilStatusEffect("sigils-speed"){{
@@ -29,5 +31,12 @@ public class LHStatuses {
             reloadMultiplier = 1.5f;
             buildSpeedMultiplier = 1.5f;
         }};
+        disabled = new StatusEffect("disabled"){{
+            color = Color.valueOf("b33caa");
+            effect = Fx.regenSuppressParticle;
+            disarm = true;
+            speedMultiplier = 0;
+        }};
+
     }
 }

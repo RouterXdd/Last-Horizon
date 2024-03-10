@@ -2,9 +2,7 @@ package lh;
 
 import arc.*;
 import arc.util.*;
-import lh.content.LHBlocks;
-import lh.content.LHStatuses;
-import lh.content.LHUnitTypes;
+import lh.content.*;
 import mindustry.game.EventType.*;
 import mindustry.mod.*;
 import mindustry.ui.dialogs.*;
@@ -16,8 +14,14 @@ public class LastHorizon extends Mod{
     @Override
     public void loadContent(){
         LHStatuses.load();
+        LHItems.load();
+        LHLiquids.load();
         LHUnitTypes.load();
         LHBlocks.load();
+        LHSchematics.load();
+        LHPlanets.load();
+        LHSectors.load();
+        LHTechTree.load();
     }
 
 }

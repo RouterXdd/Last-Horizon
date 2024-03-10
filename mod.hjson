@@ -2,7 +2,7 @@ displayName: "Last Horizon"
 name: "lh"
 author: "R.O.T."
 main: "lh.LastHorizon"
-description: "Adds a new planet(not so planet) with endless waves and a lot content"
+description: "Adds a new satellite of Erekir, but seems this is an artificial planet of [purple]Malis[]..."
 version: v0.1
-minGameVersion: 145
+minGameVersion: 146
 java: true

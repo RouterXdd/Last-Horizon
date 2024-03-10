@@ -54,6 +54,7 @@ public class Destructor extends Block {
         super.setStats();
 
         stats.add(Stat.range, range / tilesize, StatUnit.blocks);
+        stats.add(Stat.damage, damage, StatUnit.none);
         if((hasItems && itemCapacity > 0) || outputItems != null){
             stats.add(Stat.productionTime, destItem / 60f, StatUnit.seconds);
         }

@@ -1,6 +1,8 @@
 package lh.content;
 
+import arc.graphics.Color;
 import lh.graphics.LHPal;
+import mindustry.ai.types.BuilderAI;
 import mindustry.content.*;
 import mindustry.entities.abilities.SuppressionFieldAbility;
 import mindustry.entities.bullet.*;
@@ -12,8 +14,12 @@ import mindustry.type.ammo.ItemAmmoType;
 import mindustry.type.unit.ErekirUnitType;
 import mindustry.world.meta.BlockFlag;
 
+import static mindustry.Vars.tilesize;
+
 public class LHUnitTypes {
     public static UnitType
+            //core
+            observer,
             //air
             trap, seal, cage, prison, chamber,
             spark, flick, ignition, frame, burndown,
@@ -21,6 +27,68 @@ public class LHUnitTypes {
             //tonks
             halo;
     public static void load(){
+        observer = new ErekirUnitType("observer"){{
+            coreUnitDock = true;
+            controller = u -> new BuilderAI(true, 350);
+            isEnemy = false;
+            constructor = UnitEntity::create;
+
+            range = 65f;
+            faceTarget = true;
+            targetPriority = -2;
+            lowAltitude = false;
+            mineWalls = true;
+            mineFloor = true;
+            mineHardnessScaling = false;
+            flying = true;
+            mineSpeed = 10f;
+            mineTier = 3;
+            buildSpeed = 1f;
+            drag = 0.08f;
+            speed = 6f;
+            rotateSpeed = 8f;
+            accel = 0.08f;
+            itemCapacity = 80;
+            health = 1000f;
+            armor = 5f;
+            hitSize = 12f;
+            trailLength = 7;
+            buildBeamOffset = 6f;
+            payloadCapacity = 2f * 2f * tilesize * tilesize;
+            pickupUnits = false;
+            vulnerableWithPayloads = false;
+
+            fogRadius = 5f;
+            targetable = false;
+            hittable = false;
+
+            engineOffset = 6.6f;
+            engineSize = 3.4f;
+
+            weapons.add(new Weapon("stun-beam-weapon"){{
+                top = false;
+                shake = 2f;
+                shootY = 0f;
+                x = 0f;
+                reload = 55f;
+                recoil = 4f;
+                shootSound = Sounds.laser;
+
+                bullet = new LaserBulletType(){{
+                    damage = 0.1f;
+                    recoil = 1f;
+                    sideAngle = 20f;
+                    sideWidth = 1f;
+                    sideLength = 40f;
+                    length = 60f;
+                    status = LHStatuses.disabled;
+                    statusDuration = 1 * 60f;
+                    pierce = true;
+                    pierceCap = 1;
+                    colors = new Color[]{LHPal.coreLight.cpy().a(0.4f), LHPal.coreLight, Color.white};
+                }};
+            }});
+        }};
         trap = new ErekirUnitType("trap"){{
             speed = 2.15f;
             accel = 0.09f;
