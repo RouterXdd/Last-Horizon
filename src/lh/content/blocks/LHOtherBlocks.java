@@ -2,23 +2,41 @@ package lh.content.blocks;
 
 import arc.graphics.Color;
 import lh.classes.blocks.effect.CoreBlockAlt;
+import lh.classes.blocks.power.PowerLeaker;
+import lh.content.LHLiquids;
 import lh.content.LHUnitTypes;
+import lh.graphics.LHPal;
 import mindustry.content.*;
+import mindustry.gen.Sounds;
 import mindustry.type.*;
 import mindustry.world.*;
+import mindustry.world.blocks.power.ConsumeGenerator;
+import mindustry.world.blocks.production.BeamDrill;
 import mindustry.world.blocks.production.GenericCrafter;
+import mindustry.world.blocks.units.UnitFactory;
 import mindustry.world.draw.*;
+import mindustry.world.meta.BuildVisibility;
+import mindustry.world.meta.Env;
 
 import static mindustry.type.ItemStack.*;
 import static mindustry.content.Items.*;
+import static mindustry.content.Liquids.*;
 import static lh.content.LHItems.*;
+import static lh.content.LHLiquids.*;
 
 public class LHOtherBlocks {
     public static Block
             //crafting
-            chipMaker, ioniteSynthesizer,
+            chipMaker, ioniteSynthesizer, oilCrystallizer,
+            //power
+            powerLeaker, arcWaterReactor,
+            //production
+            proficientBore,
             //storage
-            coreWatch;
+            coreWatch,
+            //units
+            trapFabricator, plexFactory
+    ;
     public static void load(){
         chipMaker = new GenericCrafter("chip-maker"){{
             requirements(Category.crafting, with(copper, 160, titanium, 80, silicon, 110, beryllium, 95));
@@ -58,7 +76,62 @@ public class LHOtherBlocks {
             consumeItems(with(lead, 2, titanium, 1));
             consumeLiquid(Liquids.water, 24f / 60f);
         }};
+        oilCrystallizer = new GenericCrafter("oil-crystallizer"){{
+            requirements(Category.crafting, with(copper, 190, silicon, 120, tungsten, 105, alphaChip, 85, quartz, 70));
+            outputLiquid = new LiquidStack(Liquids.oil, 10f / 60f);
+            size = 3;
+            hasPower = true;
+            hasItems = true;
+            hasLiquids = true;
+            rotate = false;
+            solid = true;
+            outputsLiquid = true;
+            envEnabled = Env.any;
+            drawer = new DrawMulti(new DrawRegion("-bottom"), new DrawLiquidTile(oil), new DrawDefault());
+            liquidCapacity = 30f;
+            craftTime = 145;
 
+            consumePower(3.4f);
+            consumeItems(with(coal, 3, quartz, 2));
+            consumeLiquid(Liquids.water, 10f / 60f);
+        }};
+        powerLeaker = new PowerLeaker("power-leaker"){{
+            requirements(Category.power, BuildVisibility.sandboxOnly, with());
+            health = 2400;
+            size = 4;
+            powerProduction = 7.5f;
+        }};
+        arcWaterReactor = new ConsumeGenerator("arc-water-reactor"){{
+            requirements(Category.power, with(lead, 240, silicon, 165, alphaChip, 90, tungsten, 155, titanium, 190));
+            powerProduction = 2.25f;
+            consumeLiquids(LiquidStack.with(electrifiedWater, 50f / 60f));
+            size = 3;
+            drawer = new DrawMulti(new DrawRegion("-bottom"),  new DrawGlowRegion(){{
+                alpha = 1f;
+                glowScale = 5f;
+                color = Color.valueOf("daff7690");
+            }},new DrawDefault());
+            outputLiquid = new LiquidStack(water, 22f / 60f);
+            generateEffect = Fx.none;
+
+            liquidCapacity = 20f * 5;
+
+            ambientSound = Sounds.smelter;
+            ambientSoundVolume = 0.06f;
+        }};
+        proficientBore = new BeamDrill("proficient-bore"){{
+            requirements(Category.production, with(beryllium, 65, silicon, 30, alphaChip, 20));
+            consumePower(0.5f);
+
+            drillTime = 140f;
+            tier = 4;
+            size = 2;
+            range = 6;
+            fogRadius = 3;
+            researchCost = with(beryllium, 195, silicon, 90, alphaChip, 60);
+
+            consumeLiquid(cryofluid, 6f / 60f).boost();
+        }};
         coreWatch = new CoreBlockAlt("core-watch"){{
             requirements(Category.effect, with(copper, 2800, silicon, 2200, beryllium, 1850, titanium, 1460));
 
@@ -71,6 +144,27 @@ public class LHOtherBlocks {
 
             unitCapModifier = 10;
             alwaysUnlocked = isFirstTier = true;
+        }};
+        trapFabricator = new UnitFactory("trap-fabricator"){{
+            requirements(Category.units, with(silicon, 220, beryllium, 180, alphaChip, 75, titanium, 80));
+            size = 3;
+            configurable = false;
+            plans.add(new UnitPlan(LHUnitTypes.trap, 60f * 38f, with(silicon, 60, titanium, 25)));
+            researchCost = with(silicon, 400, beryllium, 320, alphaChip, 150, titanium, 200);
+            regionSuffix = "-dark";
+            fogRadius = 3;
+            consumePower(2.5f);
+        }};
+        plexFactory = new UnitFactory("plex-factory"){{
+            requirements(Category.units, with(silicon, 190, lead, 210, alphaChip, 75, beryllium, 135, graphite, 95));
+            size = 3;
+            plans.add(
+                    new UnitPlan(LHUnitTypes.arrive, 60f * 32f, with(silicon, 35, lead, 20, graphite, 15)),
+                    new UnitPlan(LHUnitTypes.spark, 60f * 27.5f, with(silicon, 20, beryllium, 30))
+            );
+            researchCost = with(silicon, 400, lead, 800, alphaChip, 150, beryllium, 300, graphite, 160);
+            fogRadius = 3;
+            consumePower(2.5f);
         }};
     }
 }

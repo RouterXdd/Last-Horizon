@@ -30,4 +30,17 @@ public class LHObjectives{
             return Core.bundle.format("requirement.alive-waves", surviveWaves, preset.localizedName);
         }
     }
+    public static class ComingSoon implements Objectives.Objective {
+        public ComingSoon(){}
+
+        @Override
+        public boolean complete(){
+            return false;
+        }
+
+        @Override
+        public String display(){
+            return Core.bundle.format("coming-soon");
+        }
+    }
 }

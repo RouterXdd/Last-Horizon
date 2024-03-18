@@ -11,10 +11,11 @@ public class LHLiquids {
     public static void load(){
         electrifiedWater = new Liquid("electrified-water", Color.valueOf("d1e542")){{
             heatCapacity = 0.4f;
+            coolant = false;
             effect = StatusEffects.wet;
             boilPoint = 0.5f;
+            lightColor = Color.valueOf("d1e542").a(0.2f);
             gasColor = Color.grays(0.9f);
-            alwaysUnlocked = true;
         }};
     }
 }

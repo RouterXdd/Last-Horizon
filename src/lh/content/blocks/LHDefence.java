@@ -2,6 +2,7 @@ package lh.content.blocks;
 
 import arc.graphics.Color;
 import arc.math.Mathf;
+import lh.classes.blocks.defence.ArmorWall;
 import lh.classes.blocks.defence.Destructor;
 import lh.classes.bullets.PointStreamBulletType;
 import lh.classes.types.LHUnitSorts;
@@ -9,6 +10,7 @@ import lh.graphics.LHPal;
 import mindustry.content.*;
 import mindustry.entities.bullet.*;
 import mindustry.entities.part.*;
+import mindustry.entities.pattern.ShootBarrel;
 import mindustry.gen.*;
 import mindustry.graphics.*;
 import mindustry.type.*;
@@ -24,7 +26,9 @@ import static lh.content.LHItems.*;
 public class LHDefence {
     public static Block
             //turrets
-            mix,line,
+            mix,line,greed,
+            //walls
+            reinforcedLeadWall,
             //special
             dawnBreaker
             ;
@@ -132,6 +136,83 @@ public class LHDefence {
             unitSort = LHUnitSorts.slowest;
 
             consumePower(6.5f);
+        }};
+        greed = new ItemTurret("greed"){{
+            requirements(Category.turret, with(graphite, 130, silicon, 95, ionite, 60, beryllium, 45));
+            ammo(
+                    beryllium, new MissileBulletType(4f, 8){{
+                        frontColor = Color.white;
+                        backColor = Pal.berylShot;
+                        width = 9f;
+                        height = 9f;
+                        shrinkY = 0f;
+                        ammoMultiplier = 5f;
+                        hitEffect = Fx.blastExplosion;
+                        despawnEffect = Fx.blastExplosion;
+                        lifetime = range / speed;
+                        pierceCap = 2;
+                    }},
+                    tungsten, new MissileBulletType(4f, 15){{
+                        frontColor = Color.white;
+                        backColor = Pal.tungstenShot;
+                        width = 9f;
+                        height = 9f;
+                        shrinkY = 0f;
+                        ammoMultiplier = 5f;
+                        hitEffect = Fx.blastExplosion;
+                        status = StatusEffects.slow;
+                        lifetime = range / speed;
+                        pierceCap = 4;
+                    }},
+                    ionite, new MissileBulletType(4f, 12){{
+                        frontColor = Color.white;
+                        backColor = LHPal.tauLightlish;
+                        width = 9f;
+                        height = 9f;
+                        shrinkY = 0f;
+                        hitEffect = Fx.blastExplosion;
+                        despawnEffect = Fx.blastExplosion;
+                        ammoMultiplier = 4f;
+                        lightningColor = LHPal.tauLightlish;
+                        lightningDamage = 2;
+                        lightning = 4;
+                        lightningLength = 6;
+                        lifetime = range / speed;
+                        pierceCap = 2;
+                    }}
+            );
+
+            shoot = new ShootBarrel(){{
+                barrels = new float[]{
+                        -3, -1.25f, 0,
+                        0, 0, 0,
+                        3, -1.25f, 0
+                };
+                shots = 3;
+                shotDelay = 6f;
+            }};
+
+            shootY = 4f;
+            reload = 48f;
+            inaccuracy = 10f;
+            range = 260f;
+            consumeAmmoOnce = false;
+            size = 2;
+            scaledHealth = 340;
+            shootSound = Sounds.missile;
+            envEnabled |= Env.space;
+
+            limitRange(8f);
+            coolant = consumeCoolant(0.3f);
+            drawer = new DrawTurret("reinforced-");
+        }};
+        reinforcedLeadWall = new ArmorWall("lead-wall"){{
+            requirements(Category.defense, with(lead, 24, ionite, 8, tungsten, 4));
+            health = 185 * 4 * 4;
+            armor = 5f;
+            armorBonus = 6;
+            buildCostMultiplier = 6.5f;
+            size = 2;
         }};
         dawnBreaker = new Destructor("dawn-breaker"){{
             requirements(Category.turret, with(copper, 300, tungsten, 120, thorium, 165, silicon, 110, ionite, 80));
