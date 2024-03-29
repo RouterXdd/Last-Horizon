@@ -23,10 +23,16 @@ public class LHTechTree {
                     });
                 });
                 nodeProduce(quartz, () -> {
+                    nodeProduce(rust, () -> {
+                        nodeProduce(stainlessSteel, () -> {
 
+                        });
+                    });
                 });
                 nodeProduce(zetaChip, () -> {
+                    nodeProduce(omegaChip, () -> {
 
+                    });
                 });
             });
             nodeProduce(electrifiedWater, () -> {
@@ -34,41 +40,97 @@ public class LHTechTree {
             });
             node(chipMaker, Seq.with(new SectorComplete(groundNull)),() -> {
                 node(ioniteSynthesizer, Seq.with(new Research(alphaChip), new SectorSurvive(5, bummer)),() -> {
+                    node(terriliumCrucible, Seq.with(new ComingSoon()),() -> {
+                        node(zeroGravity, () -> {
+
+                        });
+
+                    });
+                });
+                node(oilCrystallizer, Seq.with(new OnSector(sensor)),() -> {
 
                 });
-                node(oilCrystallizer, Seq.with(new ComingSoon()),() -> {
+                node(chipCompressor, Seq.with(new ComingSoon()),() -> {
+
+                });
+                node(steelMelter, Seq.with(new ComingSoon()),() -> {
 
                 });
             });
             node(arcWaterReactor, Seq.with(new SectorSurvive(28, bummer)),() -> {
 
             });
-            node(proficientBore, Seq.with(new ComingSoon()),() -> {
+            node(proficientBore, Seq.with(new OnSector(sensor)),() -> {
 
             });
             node(mix, Seq.with(new SectorSurvive(10, groundNull)), () -> {
                 node(dawnBreaker, Seq.with(new ComingSoon()), () -> {
 
                 });
-                node(line, Seq.with(new SectorSurvive(20, bummer), new ComingSoon()),() -> {
+                node(line, Seq.with(new SectorSurvive(20, bummer)),() -> {
+                    node(amplifier, Seq.with(new ComingSoon()),() -> {
+
+                    });
+                });
+                node(greed, Seq.with(new OnSector(sensor)),() -> {
+                    node(beat, Seq.with(new ComingSoon()),() -> {
+
+                    });
+                });
+                node(set, Seq.with(new ComingSoon()),() -> {
 
                 });
-                node(greed, Seq.with(new ComingSoon()),() -> {
+                node(rifle, Seq.with(new SectorComplete(sensor)),() -> {
+                    node(oblivion, Seq.with(new ComingSoon()),() -> {
 
+                    });
+                });
+                node(stink, Seq.with(new ComingSoon()),() -> {
+                    node(straw, Seq.with(new ComingSoon()),() -> {
+
+                    });
                 });
             });
             node(reinforcedLeadWall, () -> {
+                node(terriliumWall, () -> {
 
+                });
+                node(rustWall, () -> {
+
+                });
             });
-            node(plexFactory, Seq.with(new ComingSoon()),() -> {
+            node(plexFactory, Seq.with(new OnSector(sensor)),() -> {
                 node(arrive, () -> {
 
                 });
                 node(spark, () -> {
 
                 });
-                node(trapFabricator, Seq.with(new ComingSoon()),() -> {
+                node(trapFabricator, Seq.with(new OnSector(sensor)),() -> {
                     node(trap, () -> {
+
+                    });
+                    node(sealRefabricator, () -> {
+                        node(seal, () -> {
+
+                        });
+                    });
+                });
+                node(actionFabricator, Seq.with(new OnSector(sensor)),() -> {
+                    node(action, () -> {
+
+                    });
+                    node(resultRefabricator, () -> {
+                        node(result, () -> {
+
+                        });
+                    });
+                });
+                node(regardFactory, Seq.with(new OnSector(sensor)),() -> {
+                    node(bit, () -> {
+
+                    });
+                    node(halo, () -> {
 
                     });
                 });
@@ -81,7 +143,9 @@ public class LHTechTree {
                     node(reloadSigil, () -> {
                         node(damageSigil, () -> {
                             node(healthSigil, () -> {
+                                node(crawlerSigil, () -> {
 
+                                });
                             });
                         });
                     });
@@ -89,7 +153,9 @@ public class LHTechTree {
             });
             node(groundNull, () -> {
                 node(bummer, Seq.with(new SectorComplete(groundNull)),() -> {
+                    node(sensor, Seq.with(new SectorComplete(bummer)),() -> {
 
+                    });
                 });
             });
 

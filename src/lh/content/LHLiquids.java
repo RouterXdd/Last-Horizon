@@ -9,12 +9,12 @@ public class LHLiquids {
     public static Liquid
             electrifiedWater;
     public static void load(){
-        electrifiedWater = new Liquid("electrified-water", Color.valueOf("d1e542")){{
+        electrifiedWater = new Liquid("electrified-water", Color.valueOf("84a0d8")){{
             heatCapacity = 0.4f;
             coolant = false;
             effect = StatusEffects.wet;
             boilPoint = 0.5f;
-            lightColor = Color.valueOf("d1e542").a(0.2f);
+            lightColor = Color.valueOf("84a0d8").a(0.2f);
             gasColor = Color.grays(0.9f);
         }};
     }

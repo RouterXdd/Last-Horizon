@@ -1,20 +1,26 @@
 package lh.content;
 
+import arc.Core;
+import lh.classes.generators.LHSector;
+import mindustry.gen.Icon;
 import mindustry.type.SectorPreset;
 
 public class LHSectors {
     public static SectorPreset
-            groundNull, bummer;
+            groundNull, bummer, sensor;
     public static void load() {
 
-        groundNull = new SectorPreset("ground-null", LHPlanets.terranite, 19) {{
+        groundNull = new LHSector("ground-null", LHPlanets.terranite, 19) {{
             alwaysUnlocked = true;
             difficulty = 1;
             captureWave = 30;
         }};
-        bummer = new SectorPreset("bummer", LHPlanets.terranite, 34) {{
+        bummer = new LHSector("bummer", LHPlanets.terranite, 34) {{
             difficulty = 4;
             captureWave = 35;
+        }};
+        sensor = new LHSector("sensor", LHPlanets.terranite, 52) {{
+            difficulty = 5;
         }};
     }
 }

@@ -1,26 +1,20 @@
 package lh.classes.blocks.defence;
 
 import arc.Core;
-import arc.graphics.g2d.Draw;
-import arc.graphics.g2d.TextureRegion;
+import arc.graphics.g2d.*;
 import arc.util.Nullable;
 import mindustry.content.*;
 import mindustry.entities.Units;
 import mindustry.gen.Building;
 import mindustry.graphics.*;
 import mindustry.logic.Ranged;
-import mindustry.type.Item;
 import mindustry.type.ItemStack;
 import mindustry.world.Block;
-import mindustry.world.meta.BlockGroup;
-import mindustry.world.meta.Stat;
-import mindustry.world.meta.StatUnit;
-import mindustry.world.meta.StatValues;
+import mindustry.world.meta.*;
 
 import static mindustry.Vars.*;
 
 public class Destructor extends Block {
-    public final int timerItem = timers++;
     public float destItem = 200f;
     public float range = 60f;
     public float damage = 50f;
@@ -65,6 +59,7 @@ public class Destructor extends Block {
     }
     public class DestructorBuild extends Building implements Ranged {
         float opacity = 0;
+        public float timerItem;
         @Override
         public float range(){
             return range;
@@ -81,7 +76,7 @@ public class Destructor extends Block {
             if (opacity > 0){
                 opacity -= delta() / 50;
             }
-            if (optionalEfficiency > 0 && timer(timerItem, destItem)){
+            if (optionalEfficiency > 0 && timerItem >= destItem){
                 Units.nearbyEnemies(team, x, y, range, otherUnit -> {
                         Fx.chainLightning.at(x, y, 0f, Pal.gray, otherUnit);
                         otherUnit.damage(damage);
@@ -94,6 +89,9 @@ public class Destructor extends Block {
                         }
                     }
                 });
+                timerItem = 0;
+            } else {
+                timerItem += delta();
             }
             dumpOutputs();
         }
