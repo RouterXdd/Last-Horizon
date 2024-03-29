@@ -34,9 +34,16 @@ public class LHTechTree {
             });
             node(chipMaker, Seq.with(new SectorComplete(groundNull)),() -> {
                 node(ioniteSynthesizer, Seq.with(new Research(alphaChip), new SectorSurvive(5, bummer)),() -> {
+                    node(terriliumCrucible, Seq.with(new ComingSoon()),() -> {
+                        node(zeroGravity, () -> {
 
+                        });
+                    });
                 });
                 node(oilCrystallizer, Seq.with(new ComingSoon()),() -> {
+
+                });
+                node(chipCompressor, Seq.with(new ComingSoon()),() -> {
 
                 });
             });
@@ -56,9 +63,14 @@ public class LHTechTree {
                 node(greed, Seq.with(new ComingSoon()),() -> {
 
                 });
+                node(set, Seq.with(new ComingSoon()),() -> {
+
+                });
             });
             node(reinforcedLeadWall, () -> {
+                node(terriliumWall, () -> {
 
+                });
             });
             node(plexFactory, Seq.with(new ComingSoon()),() -> {
                 node(arrive, () -> {
@@ -72,6 +84,14 @@ public class LHTechTree {
 
                     });
                 });
+                node(regardFactory, Seq.with(new ComingSoon()),() -> {
+                    node(bit, () -> {
+
+                    });
+                    node(halo, () -> {
+
+                    });
+                });
             });
             node(observer, () -> {
                 node(disabled, () -> {
@@ -81,7 +101,9 @@ public class LHTechTree {
                     node(reloadSigil, () -> {
                         node(damageSigil, () -> {
                             node(healthSigil, () -> {
+                                node(crawlerSigil, () -> {
 
+                                });
                             });
                         });
                     });

@@ -6,6 +6,8 @@ public class LHPal {
     public static Color
     coreLight = Color.valueOf("b33caa"),
     collapse = Color.valueOf("ee50de"),
+    terrilium = Color.valueOf("b6ecee"),
+    terriliumDark = Color.valueOf("557193"),
     regardLight = Color.valueOf("ffa761"),
     regardMid = Color.valueOf("ed826a"),
     tauLightlish = Color.valueOf("bd53c2"),

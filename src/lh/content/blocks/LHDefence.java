@@ -6,9 +6,11 @@ import lh.classes.blocks.defence.ArmorWall;
 import lh.classes.blocks.defence.Destructor;
 import lh.classes.bullets.PointStreamBulletType;
 import lh.classes.types.LHUnitSorts;
+import lh.content.LHStatuses;
 import lh.graphics.LHPal;
 import mindustry.content.*;
 import mindustry.entities.bullet.*;
+import mindustry.entities.effect.WaveEffect;
 import mindustry.entities.part.*;
 import mindustry.entities.pattern.ShootBarrel;
 import mindustry.gen.*;
@@ -26,9 +28,9 @@ import static lh.content.LHItems.*;
 public class LHDefence {
     public static Block
             //turrets
-            mix,line,greed,
+            mix,line,greed, set,
             //walls
-            reinforcedLeadWall,
+            reinforcedLeadWall, terriliumWall,
             //special
             dawnBreaker
             ;
@@ -206,6 +208,105 @@ public class LHDefence {
             coolant = consumeCoolant(0.3f);
             drawer = new DrawTurret("reinforced-");
         }};
+        set = new ItemTurret("set"){{
+            requirements(Category.turret, with(graphite, 260, tungsten, 190, silicon, 280, terriliumAlloy, 90, alphaChip, 155));
+            ammo(
+                    alphaChip, new BasicBulletType(0, 0){{
+                        lifetime = 0;
+                        hitEffect = despawnEffect = Fx.none;
+                        width = height = 0;
+                        ammoMultiplier = 2;
+                        spawnBullets.add(new BasicBulletType(6.5f, 15){{
+                            width = 8f;
+                            height = 12f;
+                            lifetime = 27f;
+                            shootEffect = Fx.shootBigColor;
+                            smokeEffect = Fx.shootSmokeSquareSparse;
+                            hitColor = backColor = trailColor = LHPal.collapse;
+                            frontColor = LHPal.coreLight;
+                            trailWidth = 3f;
+                            trailLength = 5;
+                            hitEffect = despawnEffect = Fx.hitSquaresColor;
+                        }}, new SapBulletType(){{
+                            length = 175f;
+                            damage = 30;
+                            color = LHPal.coreLight;
+
+                            lifetime = 10f;
+                        }});
+                    }},
+                    zetaChip, new BasicBulletType(0, 0){{
+                        lifetime = 0;
+                        hitEffect = despawnEffect = Fx.none;
+                        width = height = 0;
+                        spawnBullets.add(new BasicBulletType(10f, 20){{
+                            width = 5.5f;
+                            hitSize = 4f;
+                            height = 8f;
+                            lifetime = 17.5f;
+                            sprite = "missile";
+                            collidesGround = false;
+                            shootEffect = Fx.shootBigColor;
+                            smokeEffect = Fx.shootSmokeSquareSparse;
+                            hitColor = backColor = trailColor = LHPal.terrilium;
+                            frontColor = LHPal.terriliumDark;
+                            trailWidth = 2.5f;
+                            trailLength = 7;
+                            hitEffect = despawnEffect = Fx.flakExplosion;
+                        }},
+                                new BasicBulletType(5.5f, 20){{
+                                    width = 12f;
+                                    height = 12f;
+                                    drag = 0.03f;
+                                    lifetime = 50f;
+                                    sprite = "circle-bullet";
+                                    shootEffect = Fx.shootBigColor;
+                                    smokeEffect = Fx.shootSmokeSquareSparse;
+                                    hitColor = backColor = trailColor = LHPal.terrilium;
+                                    frontColor = LHPal.terriliumDark;
+                                    splashDamage = 25;
+                                    splashDamageRadius = 50;
+                                    splashDamagePierce = true;
+                                    trailWidth = 2.5f;
+                                    trailLength = 7;
+                                    hitEffect = despawnEffect = new WaveEffect(){{
+                                        sizeFrom = sizeTo = 50;
+                                        strokeFrom = 3;
+                                        strokeTo = 0;
+                                        colorFrom = colorTo = LHPal.terrilium;
+                                    }};
+                                }}, new SapBulletType(){{
+                                    length = 175f;
+                                    damage = 45;
+                                    color = LHPal.terrilium;
+                                    status = LHStatuses.zeroGravity;
+                                    lifetime = 10f;
+                                }});
+                    }}
+            );
+
+            drawer = new DrawTurret("reinforced-");
+
+            size = 3;
+            range = 175f;
+            reload = 60f;
+            consumeAmmoOnce = false;
+            ammoEjectBack = 5f;
+            recoil = 1.5f;
+            shake = 1f;
+            inaccuracy = 6;
+            shoot.shots = 5;
+            shoot.shotDelay = 6f;
+            researchCostMultiplier = 0.5f;
+            shootY = 4f;
+
+            ammoUseEffect = Fx.casing2;
+            scaledHealth = 240;
+            shootSound = Sounds.shootBig;
+
+            limitRange();
+            coolant = consumeCoolant(0.25f);
+        }};
         reinforcedLeadWall = new ArmorWall("lead-wall"){{
             requirements(Category.defense, with(lead, 24, ionite, 8, tungsten, 4));
             health = 185 * 4 * 4;
@@ -214,11 +315,27 @@ public class LHDefence {
             buildCostMultiplier = 6.5f;
             size = 2;
         }};
+        terriliumWall = new ArmorWall("terrilium-wall"){{
+            requirements(Category.defense, with(terriliumAlloy, 16, silicon, 8));
+            health = 210 * 4 * 4;
+            armor = 6f;
+            armorBonus = 8;
+            buildCostMultiplier = 6.5f;
+            size = 2;
+            stage2fragile = true;
+            bullet = new SapBulletType(){{
+                damage = 15;
+                status = LHStatuses.zeroGravity;
+                sapStrength = 0;
+                length = 75;
+                color = lightColor = LHPal.terrilium;
+            }};
+        }};
         dawnBreaker = new Destructor("dawn-breaker"){{
             requirements(Category.turret, with(copper, 300, tungsten, 120, thorium, 165, silicon, 110, ionite, 80));
 
             outputItems = with(silicon, 1);
-            range = 12 * 8f;
+            range = 20 * 8f;
             size = 3;
             hasItems = true;
             consumePower(3f);

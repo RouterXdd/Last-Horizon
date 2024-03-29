@@ -1,22 +1,32 @@
 package lh.content;
 
 import arc.graphics.Color;
+import arc.graphics.g2d.*;
+import arc.math.geom.Rect;
+import lh.classes.entities.SerpuloTankUnitType;
+import lh.classes.entities.abilities.StaticFieldAbility;
+import lh.classes.entities.weapons.TractorBeamWeapon;
 import lh.graphics.LHPal;
 import mindustry.ai.types.BuilderAI;
 import mindustry.content.*;
+import mindustry.entities.Effect;
 import mindustry.entities.abilities.SuppressionFieldAbility;
 import mindustry.entities.bullet.*;
+import mindustry.entities.effect.MultiEffect;
 import mindustry.entities.part.ShapePart;
 import mindustry.entities.pattern.ShootSpread;
 import mindustry.gen.*;
-import mindustry.graphics.Pal;
+import mindustry.graphics.*;
 import mindustry.type.*;
 import mindustry.type.ammo.ItemAmmoType;
 import mindustry.type.unit.ErekirUnitType;
 import mindustry.world.meta.BlockFlag;
 
+import static arc.graphics.g2d.Draw.color;
+import static arc.graphics.g2d.Lines.stroke;
 import static mindustry.Vars.tilesize;
 import static mindustry.content.Items.*;
+import static lh.content.LHItems.*;
 
 public class LHUnitTypes {
     public static UnitType
@@ -27,15 +37,17 @@ public class LHUnitTypes {
             spark, flick, ignition, frame, burndown,
             bit, byteU, kilobyte, megabyte, gigabyte,
             //mechs
-            arrive, leave, again, comeback, reverse,
+            arrive, leave, comeback, returnU, reverse,
+            //spider
+            action, result, fault, fate, torture,
             //tonks
-            halo;
+            halo, savior, ascension, heaven, angel;
     public static void load(){
         observer = new ErekirUnitType("observer"){{
             coreUnitDock = true;
             controller = u -> new BuilderAI(true, 350);
             isEnemy = false;
-            constructor = UnitEntity::create;
+            constructor = PayloadUnit::create;
 
             range = 65f;
             faceTarget = true;
@@ -202,9 +214,9 @@ public class LHUnitTypes {
                     mirror = false;
                     reload = 90f;
                     shootCone = 40;
-                    ejectEffect = Fx.casing1;
+                    ejectEffect = Fx.none;
                     shootSound = Sounds.pulseBlast;
-                    bullet = new BasicBulletType(5f, 65) {{
+                    bullet = new BasicBulletType(5f, 80) {{
                         width = 10f;
                         height = 15f;
                         recoil = 3;
@@ -217,7 +229,7 @@ public class LHUnitTypes {
                         trailWidth = 3f;
                         fragBullets = 5;
                         fragBullet = intervalBullet = new LightningBulletType() {{
-                            damage = 15;
+                            damage = 20;
                             collidesAir = false;
                             ammoMultiplier = 1f;
                             lightningColor = Pal.sapBullet;
@@ -242,6 +254,184 @@ public class LHUnitTypes {
                         bulletInterval = 5f;
                     }};
                 }});
+        }};
+        prison = new ErekirUnitType("prison"){{
+            speed = 1.12f;
+            accel = 0.15f;
+            drag = 0.1f;
+            rotateSpeed = 3.8f;
+            flying = true;
+            health = 4985;
+            armor = 10;
+            engineOffset = 14.5f;
+            engineSize = 6;
+            targetFlags = new BlockFlag[]{BlockFlag.repair, BlockFlag.battery, null};
+            hitSize = 26;
+            itemCapacity = 55;
+            constructor = UnitEntity::create;
+            ammoType = new ItemAmmoType(alphaChip);
+
+            weapons.add(new Weapon(){{
+                y = -4.5f;
+                x = 0f;
+                mirror = false;
+                reload = 110f;
+                shootCone = 20;
+                ejectEffect = Fx.none;
+                shootSound = Sounds.pulseBlast;
+                shoot.shots = 5;
+                shoot.shotDelay = 4;
+                bullet = new BasicBulletType(8f, 40) {{
+                    width = 14f;
+                    height = 8f;
+                    sprite = "lh-sound-wave";
+                    recoil = 0.5f;
+                    lifetime = 13.75f;
+                    shootEffect = Fx.shootSmall;
+                    smokeEffect = Fx.shootSmallSmoke;
+                    frontColor = trailColor = Pal.sapBullet;
+                    backColor = Pal.sapBulletBack;
+                    pierce = true;
+                    trailLength = 4;
+                    trailWidth = 1.5f;
+                    fragBullets = 3;
+                    fragBullet = new LightningBulletType() {{
+                        damage = 20;
+                        collidesAir = false;
+                        ammoMultiplier = 1f;
+                        lightningColor = Pal.sapBullet;
+                        lightningLength = 3;
+                        lightningLengthRand = 1;
+
+                        //for visual stats only.
+                        buildingDamageMultiplier = 0.7f;
+
+                        lightningType = new BulletType(0.0001f, 0f) {{
+                            lifetime = Fx.lightning.lifetime;
+                            hitEffect = Fx.hitLancer;
+                            despawnEffect = Fx.none;
+                            status = StatusEffects.shocked;
+                            statusDuration = 10f;
+                            hittable = false;
+                            lightColor = Color.white;
+                            buildingDamageMultiplier = 0.7f;
+                        }};
+                    }};
+                }};
+            }});
+        }};
+        chamber = new ErekirUnitType("chamber"){{
+            speed = 0.68f;
+            accel = 0.15f;
+            drag = 0.125f;
+            rotateSpeed = 2.2f;
+            flying = true;
+            health = 18500;
+            armor = 16;
+            engineOffset = 16.75f;
+            engineSize = 9;
+            targetFlags = new BlockFlag[]{BlockFlag.factory, BlockFlag.drill, null};
+            hitSize = 42;
+            itemCapacity = 80;
+            constructor = UnitEntity::create;
+            ammoType = new ItemAmmoType(surgeAlloy);
+            abilities.add(new StaticFieldAbility(22, 10 * 8, 20, 4){{
+
+            }});
+
+            weapons.add(new Weapon(){{
+                y = 0f;
+                x = 15.25f;
+                mirror = true;
+                alternate = false;
+                reload = 160f;
+                shootCone = 20;
+                ejectEffect = Fx.none;
+                shootSound = Sounds.pulseBlast;
+                shoot.shots = 7;
+                shoot.shotDelay = 4;
+                bullet = new BasicBulletType(8f, 10) {{
+                    width = 11f;
+                    height = 6f;
+                    sprite = "lh-sound-wave";
+                    lifetime = 15f;
+                    shootEffect = Fx.shootSmall;
+                    smokeEffect = Fx.shootSmallSmoke;
+                    frontColor = trailColor = Pal.sapBullet;
+                    backColor = Pal.sapBulletBack;
+                    pierce = true;
+                    trailLength = 3;
+                    trailWidth = 1.5f;
+                    fragBullets = 2;
+                    fragBullet = new LightningBulletType() {{
+                        damage = 10;
+                        collidesAir = false;
+                        ammoMultiplier = 1f;
+                        lightningColor = Pal.sapBullet;
+                        lightningLength = 3;
+                        lightningLengthRand = 1;
+
+                        //for visual stats only.
+                        buildingDamageMultiplier = 0.7f;
+
+                        lightningType = new BulletType(0.0001f, 0f) {{
+                            lifetime = Fx.lightning.lifetime;
+                            hitEffect = Fx.hitLancer;
+                            despawnEffect = Fx.none;
+                            status = StatusEffects.shocked;
+                            statusDuration = 10f;
+                            hittable = false;
+                            lightColor = Color.white;
+                            buildingDamageMultiplier = 0.7f;
+                        }};
+                    }};
+                }};
+            }}, new Weapon(){{
+                            y = 4.5f;
+                            x = 0f;
+                            mirror = false;
+                            reload = 220f;
+                            shootCone = 30;
+                            ejectEffect = Fx.none;
+                            shootSound = Sounds.plasmaboom;
+                            bullet = new BasicBulletType(6f, 500) {{
+                                width = 14f;
+                                height = 8f;
+                                sprite = "circle-bullet";
+                                recoil = 4;
+                                lifetime = 100f;
+                                drag = 0.1f;
+                                collides = false;
+                                shootEffect = Fx.shootSmall;
+                                smokeEffect = Fx.shootSmallSmoke;
+                                frontColor = trailColor = Pal.sapBullet;
+                                backColor = Pal.sapBulletBack;
+                                pierce = true;
+                                trailLength = 4;
+                                trailWidth = 1.5f;
+                                intervalBullet = new LightningBulletType() {{
+                                    damage = 55;
+                                    collidesAir = false;
+                                    ammoMultiplier = 1f;
+                                    lightningColor = Pal.sapBullet;
+                                    lightningLength = 5;
+                                    lightningLengthRand = 4;
+
+                                    lightningType = new BulletType(0.0001f, 0f) {{
+                                        lifetime = Fx.lightning.lifetime;
+                                        hitEffect = Fx.hitLancer;
+                                        despawnEffect = Fx.none;
+                                        status = StatusEffects.shocked;
+                                        statusDuration = 10f;
+                                        hittable = false;
+                                        lightColor = Color.white;
+                                    }};
+                                }};
+                                intervalBullets = 5;
+                                bulletInterval = 7f;
+                            }};
+                        }}
+            );
         }};
         spark = new UnitType("spark"){{
             speed = 2.45f;
@@ -472,6 +662,149 @@ public class LHUnitTypes {
                     }}
 
             );
+        }};
+        action = new ErekirUnitType("action"){{
+            speed = 0.65f;
+            drag = 0.2f;
+            hitSize = 8f;
+            rotateSpeed = 3f;
+            targetAir = false;
+            health = 470;
+
+            legCount = 4;
+            legLength = 7f;
+            legForwardScl = 0.7f;
+            legMoveSpace = 1.2f;
+            hovering = true;
+            armor = 3f;
+            ammoType = new ItemAmmoType(silicon);
+            constructor = LegsUnit::create;
+
+            shadowElevation = 0.2f;
+            groundLayer = Layer.legUnit - 1f;
+
+            weapons.add(new Weapon("action-weapon"){{
+                top = false;
+                shootY = 0f;
+                reload = 25f;
+                ejectEffect = Fx.none;
+                recoil = 0f;
+                mirror = false;
+                x = 0;
+                y = 3f;
+                shootSound = Sounds.lasershoot;
+
+                bullet = new LaserBulletType(20){{
+                    length = 65;
+                    lifetime = 38f;
+                    pierceCap = 2;
+                    colors = new Color[]{LHPal.collapse.cpy().a(0.4f), LHPal.collapse, Color.white};
+                    collidesAir = false;
+                    shootEffect = new MultiEffect(Fx.shootSmallColor, new Effect(9, e -> {
+                        color(Color.white, e.color, e.fin());
+                        stroke(0.7f + e.fout());
+                        Lines.square(e.x, e.y, e.fin() * 5f, e.rotation + 45f);
+
+                        Drawf.light(e.x, e.y, 23f, e.color, e.fout() * 0.7f);
+                    }));
+                }};
+            }});
+        }};
+        halo = new SerpuloTankUnitType("halo"){{
+            hitSize = 14f;
+            treadPullOffset = 0;
+            speed = 1.3f;
+            rotateSpeed = 4.6f;
+            health = 410;
+            armor = 5f;
+            itemCapacity = 0;
+            treadRects = new Rect[]{new Rect(18 - 36f, 5 - 36f, 11, 59)};
+            constructor = TankUnit::create;
+
+            weapons.add(new Weapon("lh-halo-weapon"){{
+                layerOffset = 0.0001f;
+                reload = 7f;
+                shootY = 6.25f;
+                recoil = 1f;
+                rotate = true;
+                rotateSpeed = 3.4f;
+                mirror = false;
+                x = 0f;
+                y = 0f;
+                heatColor = Color.valueOf("f9350f");
+                cooldownTime = 8f;
+
+                bullet = new BasicBulletType(5.5f, 6){{
+                    sprite = "missile-large";
+                    smokeEffect = Fx.shootSmallSmoke;
+                    shootEffect = Fx.shootSmallColor;
+                    width = 3f;
+                    height = 6f;
+                    lifetime = 32.72f;
+                    hitSize = 4f;
+                    hitColor = backColor = trailColor = Color.valueOf("feb380");
+                    frontColor = Color.white;
+                    trailWidth = 1f;
+                    trailLength = 5;
+                    despawnEffect = hitEffect = Fx.hitBulletColor;
+                }};
+            }});
+        }};
+        ascension = new SerpuloTankUnitType("ascension"){{
+            hitSize = 21f;
+            treadPullOffset = 2;
+            speed = 0.82f;
+            rotateSpeed = 3.2f;
+            health = 2460;
+            armor = 8f;
+            itemCapacity = 0;
+            treadRects = new Rect[]{new Rect(25 - 55f, 11 - 55f, 17, 84)};
+            constructor = TankUnit::create;
+
+            weapons.add(new TractorBeamWeapon("lh-ascension-parallax"){{
+                layerOffset = 0.0001f;
+                reload = 3f;
+                shootY = 5.25f;
+                recoil = 1f;
+                rotate = true;
+                rotateSpeed = 3.5f;
+                shootCone = 15;
+                mirror = false;
+                targetGround = false;
+                x = 0f;
+                y = -5.75f;
+                heatColor = Color.valueOf("f9350f");
+                cooldownTime = 8f;
+                damage = 2f;
+                force = 6.5f;
+            }}, new Weapon("lh-ascension-weapon"){{
+                top = true;
+                layerOffset = 0.0001f;
+                shootSound = Sounds.flame;
+                shootY = 5.25f;
+                mirror = false;
+                rotate = true;
+                reload = 6.5f;
+                recoil = 1f;
+                x = 0;
+                y = 6;
+                ejectEffect = Fx.none;
+                bullet = new BulletType(5f, 25f){{
+                    ammoMultiplier = 3f;
+                    hitSize = 7f;
+                    lifetime = 9f;
+                    pierce = true;
+                    pierceBuilding = true;
+                    pierceCap = 3;
+                    statusDuration = 60f * 4;
+                    shootEffect = Fx.shootSmallFlame;
+                    hitEffect = Fx.hitFlameSmall;
+                    despawnEffect = Fx.none;
+                    status = StatusEffects.burning;
+                    keepVelocity = false;
+                    hittable = false;
+                }};
+            }});
         }};
     }
 }

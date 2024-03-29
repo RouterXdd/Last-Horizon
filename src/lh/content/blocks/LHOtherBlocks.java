@@ -3,6 +3,7 @@ package lh.content.blocks;
 import arc.graphics.Color;
 import lh.classes.blocks.effect.CoreBlockAlt;
 import lh.classes.blocks.power.PowerLeaker;
+import lh.classes.blocks.production.StatusGenericCrafter;
 import lh.content.LHLiquids;
 import lh.content.LHUnitTypes;
 import lh.graphics.LHPal;
@@ -27,7 +28,7 @@ import static lh.content.LHLiquids.*;
 public class LHOtherBlocks {
     public static Block
             //crafting
-            chipMaker, ioniteSynthesizer, oilCrystallizer,
+            chipMaker, chipCompressor, ioniteSynthesizer, oilCrystallizer, terriliumCrucible,
             //power
             powerLeaker, arcWaterReactor,
             //production
@@ -35,7 +36,7 @@ public class LHOtherBlocks {
             //storage
             coreWatch,
             //units
-            trapFabricator, plexFactory
+            trapFabricator, plexFactory, regardFactory
     ;
     public static void load(){
         chipMaker = new GenericCrafter("chip-maker"){{
@@ -50,6 +51,19 @@ public class LHOtherBlocks {
 
             consumePower(0.85f);
             consumeItems(with(silicon, 2, lead, 1, coal, 1));
+        }};
+        chipCompressor = new GenericCrafter("chip-compressor"){{
+            requirements(Category.crafting, with(terriliumAlloy, 40, titanium, 145, silicon, 90, tungsten, 110));
+
+            craftEffect = Fx.smeltsmoke;
+            outputItem = new ItemStack(zetaChip, 1);
+            craftTime = 165f;
+            size = 2;
+            hasItems = true;
+            drawer = new DrawMulti(new DrawDefault(), new DrawFlame(LHPal.terrilium));
+
+            consumePower(2f);
+            consumeItems(with(alphaChip, 2, terriliumAlloy, 1));
         }};
         ioniteSynthesizer = new GenericCrafter("ionite-synthesizer"){{
             requirements(Category.crafting, with(lead, 180, silicon, 115, beryllium, 140, alphaChip, 65, tungsten, 80));
@@ -94,6 +108,34 @@ public class LHOtherBlocks {
             consumePower(3.4f);
             consumeItems(with(coal, 3, quartz, 2));
             consumeLiquid(Liquids.water, 10f / 60f);
+        }};
+        terriliumCrucible = new StatusGenericCrafter("terrilium-crucible"){{
+            requirements(Category.crafting, with(beryllium, 240, oxide, 165, silicon, 210, titanium, 180, alphaChip, 110, copper, 320, quartz, 140));
+            craftEffect = Fx.none;
+            outputItem = new ItemStack(terriliumAlloy, 1);
+            craftTime = 210f;
+            size = 5;
+            hasPower = true;
+            hasLiquids = false;
+            envEnabled |= Env.space | Env.underwater;
+            envDisabled = Env.none;
+            itemCapacity = 30;
+            drawer = new DrawMulti(new DrawRegion("-bottom"), new DrawLiquidTile(electrifiedWater),new DrawArcSmelt(){{
+                flameColor = Color.valueOf("93c1d8");
+                midColor = Color.valueOf("b6ecee");
+                flameRad = 2.5f;
+                circleSpace = 3.7f;
+                particleLife = 60f;
+                particleLen = 12f;
+            }}, new DrawDefault());
+            fogRadius = 3;
+            researchCostMultiplier = 0.5f;
+            ambientSound = Sounds.plasmadrop;
+            ambientSoundVolume = 0.12f;
+
+            consumeItems(with(silicon, 3, titanium, 4, quartz, 2));
+            consumeLiquid(electrifiedWater, 100 / 60f);
+            consumePower(6f);
         }};
         powerLeaker = new PowerLeaker("power-leaker"){{
             requirements(Category.power, BuildVisibility.sandboxOnly, with());
@@ -163,6 +205,17 @@ public class LHOtherBlocks {
                     new UnitPlan(LHUnitTypes.spark, 60f * 27.5f, with(silicon, 20, beryllium, 30))
             );
             researchCost = with(silicon, 400, lead, 800, alphaChip, 150, beryllium, 300, graphite, 160);
+            fogRadius = 3;
+            consumePower(2.5f);
+        }};
+        regardFactory = new UnitFactory("regard-factory"){{
+            requirements(Category.units, with(silicon, 190, copper, 245, alphaChip, 75, beryllium, 150, titanium, 100));
+            size = 3;
+            plans.add(
+                    new UnitPlan(LHUnitTypes.bit, 60f * 34f, with(silicon, 30, copper, 40)),
+                    new UnitPlan(LHUnitTypes.halo, 60f * 35.5f, with(silicon, 50, copper, 60, beryllium, 35))
+            );
+            researchCost = with(silicon, 600, copper, 1200, alphaChip, 150, beryllium, 300, titanium, 400);
             fogRadius = 3;
             consumePower(2.5f);
         }};
