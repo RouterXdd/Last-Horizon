@@ -124,5 +124,30 @@ public class CoreBlockAlt extends CoreBlock {
                 }
             }
         }
+        public UnitType getProduction(){
+            UnitType[][] unit = {
+                    {UnitTypes.flare, UnitTypes.mono, LHUnitTypes.bit, LHUnitTypes.trap, LHUnitTypes.spark}
+            };
+            return unit[Mathf.random(unit.length - 1)][Mathf.random(0, 3)];
+        }
+        @Override
+        public void update(){
+            super.update();
+            if (this.team == state.rules.waveTeam && !state.rules.pvp){
+                unitTimeAfter += edelta();
+                if (unitTimeAfter >= unitTime && unitSpawn != null){
+                    unitSpawn.spawn(team,x + Mathf.random(0.1f), y + Mathf.random(0.1f));
+                    unitSpawn = getProduction();
+                    unitTimeAfter = 0;
+                }
+            }
+        }
+        @Override
+        public void draw(){
+            super.draw();
+            if (this.team == state.rules.waveTeam && !state.rules.pvp) {
+                Draw.draw(Layer.blockOver, () -> Drawf.construct(this, unitSpawn, 0f, unitTimeAfter / unitTime, 3, unitTimeAfter));
+            }
+        }
     }
 }

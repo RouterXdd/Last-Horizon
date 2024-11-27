@@ -69,6 +69,19 @@ public class LHOtherBlocks {
             consumePower(2f);
             consumeItems(with(alphaChip, 2, terriliumAlloy, 1));
         }};
+        chipCompressor = new GenericCrafter("chip-compressor"){{
+            requirements(Category.crafting, with(terriliumAlloy, 40, titanium, 145, silicon, 90, tungsten, 110));
+
+            craftEffect = Fx.smeltsmoke;
+            outputItem = new ItemStack(zetaChip, 1);
+            craftTime = 165f;
+            size = 2;
+            hasItems = true;
+            drawer = new DrawMulti(new DrawDefault(), new DrawFlame(LHPal.terrilium));
+
+            consumePower(2f);
+            consumeItems(with(alphaChip, 2, terriliumAlloy, 1));
+        }};
         ioniteSynthesizer = new GenericCrafter("ionite-synthesizer"){{
             requirements(Category.crafting, with(lead, 180, silicon, 115, beryllium, 140, alphaChip, 65, tungsten, 80));
             outputItem = new ItemStack(ionite, 1);

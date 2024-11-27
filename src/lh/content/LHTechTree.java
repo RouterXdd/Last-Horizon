@@ -49,11 +49,16 @@ public class LHTechTree {
                 });
                 node(oilCrystallizer, Seq.with(new OnSector(sensor)),() -> {
 
+                        });
+                    });
                 });
                 node(chipCompressor, Seq.with(new ComingSoon()),() -> {
 
                 });
                 node(steelMelter, Seq.with(new ComingSoon()),() -> {
+
+                });
+                node(chipCompressor, Seq.with(new ComingSoon()),() -> {
 
                 });
             });
@@ -89,6 +94,9 @@ public class LHTechTree {
                     node(straw, Seq.with(new ComingSoon()),() -> {
 
                     });
+                });
+                node(set, Seq.with(new ComingSoon()),() -> {
+
                 });
             });
             node(reinforcedLeadWall, () -> {
@@ -127,6 +135,14 @@ public class LHTechTree {
                     });
                 });
                 node(regardFactory, Seq.with(new OnSector(sensor)),() -> {
+                    node(bit, () -> {
+
+                    });
+                    node(halo, () -> {
+
+                    });
+                });
+                node(regardFactory, Seq.with(new ComingSoon()),() -> {
                     node(bit, () -> {
 
                     });
